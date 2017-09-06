@@ -1,5 +1,5 @@
 # Turtle NinZAAAA
-Turtle NinZAAAA is an infinite run game based on the Teenage Mutant Ninja Turtles franchise.
+Turtle NinZAAAA is an infinite run game inspired by Firedragon from Orisinal.com themed with the Teenage Mutant Ninja Turtles franchise.
 
 ### Description
 After a long night of fighting the Foot, the turtles are hungry for their favorite food. Luckily for them a pizza delivery guy had a bike accident right above their sewer and dropped a load of pizza boxes. Help the turtles slice up their pies so they can eat but avoid getting hit by them.
