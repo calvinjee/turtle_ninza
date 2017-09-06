@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      canvas {
+        display: flex;
+        border: 1px solid black;
+        margin: auto;
+        background-image: url('./assets/images/bg-2.png');
+        background-size: contain;
+        background-repeat: round;
+      }
+    </style>
+    <script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const playerRaf = new Image()
+      playerRaf.src = './assets/images/raf_sprite.gif'
+
+      class Player {
+        constructor(options) {
+          this.context = options.context
+          this.width = options.width
+          this.height = options.height
+          this.image = options.image
+        }
+
+      }
+      let rafOptions = {
+        context: ctx;
+        width: 50;
+        height: 50;
+        image: playerRaf
+      };
+
+      let raf = new Player(rafOptions);
+      
+
+    })
+
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+  </body>
+</html>
