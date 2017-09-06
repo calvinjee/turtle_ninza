@@ -19,27 +19,45 @@
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
 
-      const playerRaf = new Image()
-      playerRaf.src = './assets/images/raf_sprite.gif'
-
       class Player {
         constructor(options) {
-          this.context = options.context
-          this.width = options.width
-          this.height = options.height
-          this.image = options.image
+          this.context = options.context;
+          this.width = options.width;
+          this.height = options.height;
+          this.image = options.image;
         }
 
+        render() {
+          this.image.onload = () => {
+            this.context.drawImage(
+              this.image,
+              0, // source x
+              110, // source y
+              this.width, // source width
+              this.height, // source height
+              this.context.canvas.width/2, // destination x
+              this.context.canvas.height-100, // destination y
+              this.width, // destination width
+              this.height // destination height
+            )
+          }
+        }
       }
-      let rafOptions = {
-        context: ctx;
-        width: 50;
-        height: 50;
-        image: playerRaf
+
+      const playerRaf = new Image();
+      playerRaf.src = './assets/images/raf_sprite.gif';
+
+      const rafOptions = {
+        context: ctx,
+        width: 70,
+        height: 95,
+        image: playerRaf,
       };
 
-      let raf = new Player(rafOptions);
-      
+      const raf = new Player(rafOptions);
+
+      raf.render();
+
 
     })
 
