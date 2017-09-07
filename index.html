@@ -25,36 +25,70 @@
       //   ctx.drawImage(background, 0, 0)
       // }
 
-      window.setInterval(() => {
-        raf.move(raf.direction)
-      })
-
-      class PlayerSprite {
+      class Entity {
         constructor(options) {
           this.context = options.context;
-          this.width = options.width;
-          this.height = options.height;
-          this.dx = this.context.canvas.width / 2;
-          this.dy = this.context.canvas.height - 100;
           this.image = options.image;
+          this.sX = options.sX;
+          this.sY = options.sY;
+          this.sWidth = options.sWidth;
+          this.sHeight = options.sHeight;
+          this.dX = options.dX;
+          this.dY = options.dY;
+          this.dWidth = options.dWidth;
+          this.dHeight = options.dHeight;
+        }
+
+        draw() {
+          this.context.drawImage(
+            this.image,
+            this.sX, // source x
+            this.sY, // source y
+            this.sWidth, // source width
+            this.sHeight, // source height
+            this.dx, // destination x
+            this.dy, // destination y
+            this.dWidth, // destination width
+            this.dHeight // destination height
+          );
+        }
+
+        render() {
+          this.image.onload = () => {
+            this.draw();
+            debugger
+          };
+        }
+      }
+
+      class Player extends Entity {
+        constructor(options) {
+          super(options);
+          this.moveBools = {
+            left: false,
+            right: false,
+            // up: false,
+            // down: false
+          };
+          this.direction = "idle";
+
           this.frameIndex = 0;
           this.tickCount = 0;
           this.ticksPerFrame = 60;
           this.numberOfFrames = options.numberOfFrames || 1;
-          this.moveBools = {
-            left: false,
-            right: false,
-            up: false,
-            down: false
-          };
-          this.direction = "idle";
+          this.movement = options.movement;
         }
 
         move(direction) {
-
-          if (Object.values(raf.moveBools).some((bool) => bool === true )) {
+          debugger
+          if (Object.values(this.moveBools).some((bool) => bool === true )) {
             this.tickCount += 2;
-            this.context.clearRect(this.dx, this.dy, this.width / this.numberOfFrames, this.height);
+            this.context.clearRect(this.dx, this.dy, this.width, this.height);
+
+            this.sX = this.frameIndex * (this.movement.width / this.movement.numberOfFrames);
+            this.sX = this.movement.y;
+            this.sWidth = this.movement.width / this.movement.numberOfFrames;
+            this.sHeight = this.movement.height;
 
             let dir;
             switch(direction) {
@@ -66,49 +100,16 @@
                 break;
             }
 
+            this.dx += dir;
+            this.dWidth = this.sWidth;
+            this.dHeight = this.sHeight;
+
             if (this.tickCount > this.ticksPerFrame) {
-              this.frameIndex = (this.frameIndex + 1) % this.numberOfFrames
-              this.tickCount = 0
+              this.frameIndex = (this.frameIndex + 1) % this.movement.numberOfFrames;
+              this.tickCount = 0;
             }
 
-            this.dx += dir
-
             this.draw();
-          }
-        }
-
-        draw() {
-          this.context.drawImage(
-            this.image,
-            this.frameIndex * this.width / this.numberOfFrames, // source x
-            110, // source y
-            this.width / this.numberOfFrames, // source width
-            this.height, // source height
-            this.dx, // destination x
-            this.dy, // destination y
-            this.width / this.numberOfFrames, // destination width
-            this.height // destination height
-          )
-        }
-
-
-        shoot() {
-
-        }
-
-        render() {
-          this.image.onload = () => {
-            this.context.drawImage(
-              this.image,
-              this.frameIndex * (this.width / this.numberOfFrames), // source x
-              110, // source y
-              this.width / this.numberOfFrames, // source width
-              this.height, // source height
-              this.dx, // destination x
-              this.dy, // destination y
-              this.width / this.numberOfFrames, // destination width
-              this.height // destination height
-            )
           }
         }
       }
@@ -118,13 +119,25 @@
 
       const rafOptions = {
         context: ctx,
-        width: 350,
-        height: 95,
         image: playerRaf,
-        numberOfFrames: 5,
+        sX: 0,
+        sY: 95,
+        sWidth: 350 / 5,
+        sHeight: 110,
+        dX: ctx.canvas.width / 2,
+        dY: ctx.canvas.height - 100,
+        dWidth: 350 / 5,
+        dHeight: 110,
+        movement: {
+          x: 0,
+          y: 110,
+          width: 350,
+          height: 95,
+          numberOfFrames: 5,
+        }
       };
 
-      const raf = new PlayerSprite(rafOptions);
+      const raf = new Player(rafOptions);
 
       raf.render();
 
@@ -140,15 +153,13 @@
             raf.moveBools.right = true;
             break;
           case 32: // space
-            raf.shoot();
-            break;
+            // raf.shoot();
+            // break;
         }
-        // raf.draw(e.keyCode)
-        }
-      )
+
+      });
 
       document.addEventListener('keyup', (e) => {
-        console.log(e.keyCode)
         switch(e.keyCode) {
           case 37: // left
 
@@ -159,14 +170,19 @@
             raf.moveBools.right = false;
             break;
           case 32: // space
-            raf.shoot();
-
+            // raf.shoot();
         }
+      });
 
-        }
-      )
 
-    })
+      window.setInterval(() => {
+
+        raf.move(raf.direction);
+      });
+
+    });
+
+
 
     </script>
   </head>
