@@ -26,13 +26,7 @@
       // }
 
       window.setInterval(() => {
-        raf.tickCount += 1
-        // if (raf.moveBools) {
-        //   raf.draw(raf.direction)
-        // }
-        if (Object.values(raf.moveBools).some((bool) => bool === true )) {
-          raf.draw(raf.direction)
-        }
+        raf.move(raf.direction)
       })
 
       class PlayerSprite {
@@ -56,28 +50,34 @@
           this.direction = "idle";
         }
 
-        draw(direction) {
-          this.context.clearRect(this.dx, this.dy, this.width / this.numberOfFrames, this.height);
+        move(direction) {
 
-          let dir;
-          switch(direction) {
-            case 'left': // left
-              dir = -1;
-              break;
-            case 'right': // right
-              dir = 1;
-              break;
+          if (Object.values(raf.moveBools).some((bool) => bool === true )) {
+            this.tickCount += 2;
+            this.context.clearRect(this.dx, this.dy, this.width / this.numberOfFrames, this.height);
+
+            let dir;
+            switch(direction) {
+              case 'left': // left
+                dir = -1;
+                break;
+              case 'right': // right
+                dir = 1;
+                break;
+            }
+
+            if (this.tickCount > this.ticksPerFrame) {
+              this.frameIndex = (this.frameIndex + 1) % this.numberOfFrames
+              this.tickCount = 0
+            }
+
+            this.dx += dir
+
+            this.draw();
           }
+        }
 
-          this.tickCount += 1;
-
-          if (this.tickCount > this.ticksPerFrame) {
-            this.frameIndex = (this.frameIndex + 1) % this.numberOfFrames
-            this.tickCount = 0
-          }
-
-          this.dx += dir
-
+        draw() {
           this.context.drawImage(
             this.image,
             this.frameIndex * this.width / this.numberOfFrames, // source x
@@ -89,6 +89,10 @@
             this.width / this.numberOfFrames, // destination width
             this.height // destination height
           )
+        }
+
+
+        shoot() {
 
         }
 
@@ -136,7 +140,8 @@
             raf.moveBools.right = true;
             break;
           case 32: // space
-
+            raf.shoot();
+            break;
         }
         // raf.draw(e.keyCode)
         }
@@ -154,6 +159,7 @@
             raf.moveBools.right = false;
             break;
           case 32: // space
+            raf.shoot();
 
         }
 
