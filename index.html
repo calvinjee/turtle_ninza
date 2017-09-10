@@ -4,20 +4,38 @@
     <meta charset="utf-8">
     <title></title>
     <style media="screen">
-      canvas {
-        display: flex;
-        border: 1px solid black;
-        margin: auto;
-        background-image: url('./assets/images/bg-2.png');
-        background-size: contain;
-        background-repeat: round;
-        border-radius: 5px;
-      }
     </style>
+    <link rel="stylesheet" href="./assets/css/reset.css">
+    <link rel="stylesheet" href="./assets/css/game.css">
     <link href="https://fonts.googleapis.com/css?family=Bungee|Creepster|Freckle+Face|Frijole|Press+Start+2P|Shojumaru|Slackey" rel="stylesheet">
     <script type="text/javascript" src='./bundle.js'></script>
   </head>
   <body>
-    <canvas id="canvas" width="400" height="500"></canvas>
+    <div class="game">
+      <canvas id="canvas" width="400" height="500"></canvas>
+      <div class="modal">
+        <div class="header">
+          <h2>Calvin Jee</h2>
+          <h3>presents</h3>
+          <h1>Turtle</h1>
+          <h1>NinZAAAA</h1>
+        </div>
+        <div class="footer-img">
+          <img src="./assets/images/tmnt_5.jpg" >
+        </div>
+      </div>
+
+      <!-- <div class="modal">
+        <h2>How to Play</h2>
+
+        <p>Slice open all the pizza boxes</p>
+        <p>and eat all the slices that fall</p>
+
+        <h4>Press</h4>
+
+        <h4>to Start!</h4>
+
+      </div> -->
+    </div>
   </body>
 </html>
