@@ -1,8 +1,8 @@
 .game {
-  background-image: url('../images/tmnt_3.jpg');
-  /*background-position: 50px 200px;;;*/
+  background-image: url('../images/main_bg.jpg');
   background-size: contain;
-  height: 100vh;;
+  height: 100vh;
+  /*position: relative;*/
 }
 
 #canvas {
@@ -13,9 +13,9 @@
   background-size: contain;
   background-repeat: round;
   position: fixed;
-  top: 25%;
+  top: 15%;
   left: 50%;
-  transform: translate(-50%, -25%);
+  transform: translate(-50%, -15%);
   border-radius: 5px;
   border: 1px solid #6D9358;
 }
@@ -28,9 +28,9 @@
   width: 400px;
   height: 500px;
   position: fixed;
-  top: 25%;
+  top: 15%;
   left: 50%;
-  transform: translate(-50%, -25%);
+  transform: translate(-50%, -15%);
   background-color: #6D9358;
   border: 1px solid #6D9358;
   border-radius: 5px;
@@ -38,16 +38,16 @@
 }
 
 
-.modal h1 {
+.header h1 {
   font-size: 32px;
 }
 
-.modal h2 {
+.header h2 {
   margin-top: 50px;
   font-size: 19px;
 }
 
-.modal h3 {
+.header h3 {
   margin-top: 30px;
   margin-bottom: 30px;
   font-size: 14px;
@@ -62,7 +62,89 @@
 
 .footer-img img {
   width: 400px;
+  height: auto;
 }
+
+/*#directions {
+  box-sizing: border-box;
+  padding: 25px 50px;;
+}*/
+
+.how-to-play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Bungee'
+}
+
+.how-to-play img {
+  width: 400px;
+  height: auto;
+}
+
+.how-to-play h2 {
+  margin: 20px 0;
+  font-size: 18px;
+}
+
+.how-to-play h4 {
+  margin: 20px 0;
+  font-size: 24px;
+}
+
+.how-to-play p {
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+#arrows {
+  width: 75px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+#spacebar {
+  width: 175px;
+  height: auto;
+  margin: 15px 0 10px 0;
+}
+
+#pizza-box {
+  width: 75px;
+  height: auto;
+  margin: 15px 0;
+}
+
+#pizza {
+  width: 40px;
+  height: auto;
+  margin: 10px 0;
+}
+
+#enter {
+  width: 30px;
+  height: 30px;
+  margin: 0 10px;
+}
+
+.start {
+  display: flex;
+  align-items: baseline;
+}
+
+.keys {
+  display: flex;
+  justify-content: center;
+}
+
+
+
 
 .hidden {
   display: none;

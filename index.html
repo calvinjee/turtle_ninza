@@ -13,7 +13,7 @@
   <body>
     <div class="game">
       <canvas id="canvas" width="400" height="500"></canvas>
-      <div class="modal">
+      <div id="intro" class="modal hidden">
         <div class="header">
           <h2>Calvin Jee</h2>
           <h3>presents</h3>
@@ -25,17 +25,28 @@
         </div>
       </div>
 
-      <!-- <div class="modal">
-        <h2>How to Play</h2>
-
-        <p>Slice open all the pizza boxes</p>
-        <p>and eat all the slices that fall</p>
-
-        <h4>Press</h4>
-
-        <h4>to Start!</h4>
-
-      </div> -->
+      <div id="directions" class="modal">
+        <div class="how-to-play">
+          <h2>How to Play</h2>
+          <img id="arrows" src="./assets/images/arrow_keys.png" >
+          <div class="controls">
+            <p>Use the</p>
+            <p>left and right</p>
+            <p>arrow keys to move</p>
+            <img id="spacebar" src="./assets/images/spacebar.png" >
+            <p>Hit space bar to shoot</p>
+            <img id="pizza-box" src="./assets/images/pizza_box.png" >
+          </div>
+          <p>Slice open all the pizza boxes</p>
+          <p>and eat all the slices that fall</p>
+          <img id="pizza" src="./assets/images/pizza_2.png" >
+          <div class="start">
+            <h4>Press</h4>
+            <img id="enter" src="./assets/images/enter_key.png" >
+            <h4>to Start</h4>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
