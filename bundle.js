@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -137,268 +137,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _game = __webpack_require__(3);
-
-var _game2 = _interopRequireDefault(_game);
-
-var _entity = __webpack_require__(0);
-
-var _entity2 = _interopRequireDefault(_entity);
-
-var _projectile = __webpack_require__(6);
-
-var _projectile2 = _interopRequireDefault(_projectile);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Player = function (_Entity) {
-  _inherits(Player, _Entity);
-
-  function Player(options) {
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, options));
-
-    _this.moveBools = {
-      left: false,
-      right: false
-    };
-    _this.canShoot = true;
-    _this.image = options.image;
-    _this.frameIndex = 0;
-    _this.tickCount = 0;
-    _this.ticksPerFrame = 10;
-    _this.movement = options.movement;
-    _this.hit = false;
-    _this.hitCount = 0;
-    _this.hitFrames = [0, 1000];
-    return _this;
-  }
-
-  _createClass(Player, [{
-    key: 'shoot',
-    value: function shoot() {
-      var _this2 = this;
-
-      if (this.canShoot && this.hit === false) {
-        var projectileOptions = {
-          sX: 0,
-          sY: 0,
-          sWidth: 512,
-          sHeight: 512,
-          dX: this.dX + 20,
-          dY: this.game.platforms[0].dY - Player.PLATFORM_ADJ,
-          dWidth: 25,
-          dHeight: 25,
-          game: this.game
-        };
-
-        var projectile = new _projectile2.default(projectileOptions);
-        projectile.game.add(projectile);
-        this.canShoot = false;
-        setTimeout(function () {
-          _this2.canShoot = true;
-        }, 250);
-      }
-    }
-  }, {
-    key: 'isCollidedWith',
-    value: function isCollidedWith(object) {
-      if (this.hit === false) {
-        if (object.dY + object.dHeight < this.game.platforms[0].dY && this.dY < object.dY + object.dHeight && (object.dX > this.dX && object.dX < this.dX + this.dWidth || object.dX + object.dWidth > this.dX && object.dX + object.dWidth < this.dX + this.dWidth)) {
-          return true;
-        }
-        return false;
-      }
-    }
-  }, {
-    key: 'loseLife',
-    value: function loseLife() {
-      if (this.hit === false) {
-        this.hit = true;
-        this.moveBools = {
-          left: false,
-          right: false
-        };
-        this.tickCount = 0;
-        this.frameIndex = 0;
-      }
-    }
-  }, {
-    key: 'move',
-    value: function move() {
-      if (Object.values(this.moveBools).some(function (bool) {
-        return bool === true;
-      })) {
-        this.tickCount += 1;
-
-        var dir = 0;
-        switch (this.direction) {
-          case 'left':
-            // left
-            if (this.dX >= -20) {
-              dir = -5;
-            }
-            break;
-          case 'right':
-            // right
-            if (this.dX <= _game2.default.DIM_X - this.dWidth + 40) {
-              dir = 5;
-            }
-            break;
-        }
-
-        this.dX += dir;
-        this.dY = this.game.platforms[0].dY - Player.PLATFORM_ADJ;
-
-        this.sX = this.frameIndex * (this.movement.width / this.movement.numberOfFrames);
-        this.sY = this.movement.y;
-        this.sWidth = this.movement.width / this.movement.numberOfFrames;
-        this.sHeight = this.movement.height;
-
-        if (this.tickCount > this.ticksPerFrame) {
-          this.frameIndex = (this.frameIndex + 1) % this.movement.numberOfFrames;
-          this.tickCount = 0;
-        }
-      }
-    }
-  }, {
-    key: 'draw',
-    value: function draw(ctx) {
-
-      if (this.hit) {
-        this.tickCount += 1;
-        this.hitCount += 1;
-        this.sY = 1240;
-        this.sX = this.hitFrames[this.frameIndex];
-
-        if (this.tickCount > 5) {
-          // this.hit = false;
-          // this.sY = this.movement.y;
-          this.frameIndex = (this.frameIndex + 1) % this.hitFrames.length;
-          this.tickCount = 0;
-        }
-
-        if (this.hitCount >= 120) {
-          this.hit = false;
-          this.hitCount = 0;
-          this.sY = 115;
-          this.sX = 0;
-        }
-
-        this.dY = this.game.platforms[0].dY - Player.PLATFORM_ADJ;
-      }
-      ctx.drawImage(this.image, this.sX, // source x
-      this.sY, // source y
-      this.sWidth, // source width
-      this.sHeight, // source height
-      this.dX, // destination x
-      this.game.platforms[0].dY - Player.PLATFORM_ADJ, // destination y
-      this.dWidth, // destination width
-      this.dHeight // destination height
-      );
-    }
-  }]);
-
-  return Player;
-}(_entity2.default);
-
-Player.SCALE = 1.25;
-Player.PLATFORM_ADJ = 80;
-
-exports.default = Player;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _entity = __webpack_require__(0);
-
-var _entity2 = _interopRequireDefault(_entity);
-
-var _player = __webpack_require__(1);
+var _player = __webpack_require__(2);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _pizza_box = __webpack_require__(4);
+var _pizza_box = __webpack_require__(3);
 
 var _pizza_box2 = _interopRequireDefault(_pizza_box);
 
-var _game = __webpack_require__(3);
-
-var _game2 = _interopRequireDefault(_game);
-
-var _game_view = __webpack_require__(5);
-
-var _game_view2 = _interopRequireDefault(_game_view);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-document.addEventListener('DOMContentLoaded', function () {
-  var canvas = document.getElementById('canvas');
-  var ctx = canvas.getContext('2d');
-
-  var game = new _game2.default();
-  var gameView = new _game_view2.default(game, ctx);
-  var introModal = document.getElementById("intro");
-  window.directionsModal = document.getElementById("directions");
-
-  window.startGame = function (e) {
-    if (e.keyCode === 13) {
-      window.directionsModal.className = "hidden";
-      var newGame = new _game2.default();
-      gameView.game = newGame;
-      gameView.start();
-      removeEventListener('keypress', window.startGame);
-    }
-  };
-
-  setTimeout(function () {
-    introModal.className = "hidden";
-    window.directionsModal.className = "modal";
-    addEventListener('keypress', window.startGame);
-  }, 3000);
-});
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(1);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _pizza_box = __webpack_require__(4);
-
-var _pizza_box2 = _interopRequireDefault(_pizza_box);
-
-var _pizza = __webpack_require__(7);
+var _pizza = __webpack_require__(6);
 
 var _pizza2 = _interopRequireDefault(_pizza);
 
-var _projectile = __webpack_require__(6);
+var _projectile = __webpack_require__(4);
 
 var _projectile2 = _interopRequireDefault(_projectile);
 
-var _platform = __webpack_require__(8);
+var _platform = __webpack_require__(7);
 
 var _platform2 = _interopRequireDefault(_platform);
 
@@ -578,6 +333,8 @@ var Game = function () {
           var projectile = this.projectiles[i];
           var pizzaBox = this.pizzaBoxes[j];
           if (projectile.isCollidedWith(pizzaBox)) {
+            Game.SOUNDS.hitPizzaBox.playbackRate = 4;
+            Game.SOUNDS.hitPizzaBox.play();
             pizzaBox.remove();
             this.addPizza(pizzaBox.dX, pizzaBox.dY, pizzaBox.fallSpeed);
             this.score += 10;
@@ -594,10 +351,16 @@ var Game = function () {
         var item = fallingObjects[i];
         if (player.isCollidedWith(item)) {
           if (item instanceof _pizza_box2.default) {
+            if (this.lives > 1) {
+              Game.SOUNDS.loseLife.play();
+            }
             this.lives -= 1;
             player.loseLife();
             item.remove();
           } else if (item instanceof _pizza2.default) {
+            Game.SOUNDS.eatPizza.volume = 1;
+            Game.SOUNDS.eatPizza.playbackRate = 2;
+            Game.SOUNDS.eatPizza.play();
             item.remove();
             this.score += 10;
           }
@@ -643,11 +406,208 @@ var Game = function () {
 
 Game.DIM_X = 400;
 Game.DIM_Y = 500;
+Game.SOUNDS = {
+  gameMusic: new Audio('./assets/sounds/game_music.mp3'),
+  throwProjectile: new Audio('./assets/sounds/throw.wav'),
+  hitPizzaBox: new Audio('./assets/sounds/hit.wav'),
+  eatPizza: new Audio('./assets/sounds/crunch.wav'),
+  raisePlatform: new Audio('./assets/sounds/platform.wav'),
+  loseLife: new Audio('./assets/sounds/lose_life.wav'),
+  loseGame: new Audio('./assets/sounds/lose_game.wav')
+};
 
 exports.default = Game;
 
 /***/ }),
-/* 4 */
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _game = __webpack_require__(1);
+
+var _game2 = _interopRequireDefault(_game);
+
+var _entity = __webpack_require__(0);
+
+var _entity2 = _interopRequireDefault(_entity);
+
+var _projectile = __webpack_require__(4);
+
+var _projectile2 = _interopRequireDefault(_projectile);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Player = function (_Entity) {
+  _inherits(Player, _Entity);
+
+  function Player(options) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, options));
+
+    _this.moveBools = {
+      left: false,
+      right: false
+    };
+    _this.canShoot = true;
+    _this.image = options.image;
+    _this.frameIndex = 0;
+    _this.tickCount = 0;
+    _this.ticksPerFrame = 10;
+    _this.movement = options.movement;
+    _this.hit = false;
+    _this.hitCount = 0;
+    _this.hitFrames = [0, 1000];
+    return _this;
+  }
+
+  _createClass(Player, [{
+    key: 'shoot',
+    value: function shoot() {
+      var _this2 = this;
+
+      var projectileOptions = {
+        sX: 0,
+        sY: 0,
+        sWidth: 512,
+        sHeight: 512,
+        dX: this.dX + 20,
+        dY: this.game.platforms[0].dY - Player.PLATFORM_ADJ,
+        dWidth: 25,
+        dHeight: 25,
+        game: this.game
+      };
+
+      var projectile = new _projectile2.default(projectileOptions);
+      projectile.game.add(projectile);
+      this.canShoot = false;
+      setTimeout(function () {
+        _this2.canShoot = true;
+      }, 250);
+    }
+  }, {
+    key: 'isCollidedWith',
+    value: function isCollidedWith(object) {
+      if (this.hit === false) {
+        if (object.dY + object.dHeight < this.game.platforms[0].dY && this.dY < object.dY + object.dHeight && (object.dX > this.dX && object.dX < this.dX + this.dWidth || object.dX + object.dWidth > this.dX && object.dX + object.dWidth < this.dX + this.dWidth)) {
+          return true;
+        }
+        return false;
+      }
+    }
+  }, {
+    key: 'loseLife',
+    value: function loseLife() {
+      if (this.hit === false) {
+        this.hit = true;
+        this.moveBools = {
+          left: false,
+          right: false
+        };
+        this.tickCount = 0;
+        this.frameIndex = 0;
+      }
+    }
+  }, {
+    key: 'move',
+    value: function move() {
+      if (Object.values(this.moveBools).some(function (bool) {
+        return bool === true;
+      })) {
+        this.tickCount += 1;
+
+        var dir = 0;
+        switch (this.direction) {
+          case 'left':
+            // left
+            if (this.dX >= -20) {
+              dir = -5;
+            }
+            break;
+          case 'right':
+            // right
+            if (this.dX <= _game2.default.DIM_X - this.dWidth + 40) {
+              dir = 5;
+            }
+            break;
+        }
+
+        this.dX += dir;
+        this.dY = this.game.platforms[0].dY - Player.PLATFORM_ADJ;
+
+        this.sX = this.frameIndex * (this.movement.width / this.movement.numberOfFrames);
+        this.sY = this.movement.y;
+        this.sWidth = this.movement.width / this.movement.numberOfFrames;
+        this.sHeight = this.movement.height;
+
+        if (this.tickCount > this.ticksPerFrame) {
+          this.frameIndex = (this.frameIndex + 1) % this.movement.numberOfFrames;
+          this.tickCount = 0;
+        }
+      }
+    }
+  }, {
+    key: 'draw',
+    value: function draw(ctx) {
+
+      if (this.hit) {
+        this.tickCount += 1;
+        this.hitCount += 1;
+        this.sY = 1240;
+        this.sX = this.hitFrames[this.frameIndex];
+
+        if (this.tickCount > 5) {
+          // this.hit = false;
+          // this.sY = this.movement.y;
+          this.frameIndex = (this.frameIndex + 1) % this.hitFrames.length;
+          this.tickCount = 0;
+        }
+
+        if (this.hitCount >= 120) {
+          this.hit = false;
+          this.hitCount = 0;
+          this.sY = 115;
+          this.sX = 0;
+        }
+
+        this.dY = this.game.platforms[0].dY - Player.PLATFORM_ADJ;
+      }
+      ctx.drawImage(this.image, this.sX, // source x
+      this.sY, // source y
+      this.sWidth, // source width
+      this.sHeight, // source height
+      this.dX, // destination x
+      this.game.platforms[0].dY - Player.PLATFORM_ADJ, // destination y
+      this.dWidth, // destination width
+      this.dHeight // destination height
+      );
+    }
+  }]);
+
+  return Player;
+}(_entity2.default);
+
+Player.SCALE = 1.25;
+Player.PLATFORM_ADJ = 80;
+
+exports.default = Player;
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -663,7 +623,7 @@ var _entity = __webpack_require__(0);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _game = __webpack_require__(3);
+var _game = __webpack_require__(1);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -696,6 +656,9 @@ var PizzaBox = function (_Entity) {
     value: function move() {
       this.dY += this.fallSpeed;
       if (this.dY > _game2.default.DIM_Y) {
+        // Game.SOUNDS.raisePlatform.currentTime = 3;
+        // Game.SOUNDS.raisePlatform.playbackRate = 2;
+        _game2.default.SOUNDS.raisePlatform.play();
         this.remove();
         this.game.platforms[0].rise();
       }
@@ -710,106 +673,7 @@ PizzaBox.SCALE = 0.015;
 exports.default = PizzaBox;
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var GameView = function () {
-  function GameView(game, ctx) {
-    _classCallCheck(this, GameView);
-
-    this.game = game;
-    this.ctx = ctx;
-    this.ctx.font = '28px Slackey';
-    this.ctx.fillStyle = '#84152D';
-    this.addHandlers();
-  }
-
-  _createClass(GameView, [{
-    key: 'start',
-    value: function start() {
-      this.platform = this.game.addPlatform();
-      this.player = this.game.addPlayer(this.platform.dY);
-      this.game.rainPizza();
-      requestAnimationFrame(this.animate.bind(this));
-    }
-  }, {
-    key: 'addHandlers',
-    value: function addHandlers() {
-      var _this = this;
-
-      document.addEventListener('keydown', function (e) {
-        switch (e.keyCode) {
-          case 37:
-            // left
-            _this.player.direction = 'left';
-            _this.player.moveBools.left = true;
-            break;
-          case 39:
-            // right
-            _this.player.direction = 'right';
-            _this.player.moveBools.right = true;
-            break;
-        }
-      });
-
-      document.addEventListener('keypress', function (e) {
-        switch (e.keyCode) {
-          case 32:
-            // space
-            _this.player.shoot();
-            break;
-        }
-      });
-
-      document.addEventListener('keyup', function (e) {
-        switch (e.keyCode) {
-          case 37:
-            // left
-            _this.player.moveBools.left = false;
-            break;
-          case 39:
-            // right
-            _this.player.moveBools.right = false;
-            break;
-        }
-      });
-    }
-  }, {
-    key: 'animate',
-    value: function animate() {
-      this.game.step();
-      this.game.draw(this.ctx);
-      this.game.updateScore(this.ctx);
-      this.game.updateLives(this.ctx);
-      var loop = requestAnimationFrame(this.animate.bind(this));
-      if (this.game.lives === 0) {
-        cancelAnimationFrame(loop);
-        setTimeout(function () {
-          window.directionsModal.className = "modal";
-          addEventListener('keypress', window.startGame);
-        }, 5000);
-      }
-    }
-  }]);
-
-  return GameView;
-}();
-
-exports.default = GameView;
-
-/***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -825,7 +689,7 @@ var _entity = __webpack_require__(0);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _game = __webpack_require__(3);
+var _game = __webpack_require__(1);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -888,7 +752,62 @@ var Projectile = function (_Entity) {
 exports.default = Projectile;
 
 /***/ }),
-/* 7 */
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _entity = __webpack_require__(0);
+
+var _entity2 = _interopRequireDefault(_entity);
+
+var _player = __webpack_require__(2);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _pizza_box = __webpack_require__(3);
+
+var _pizza_box2 = _interopRequireDefault(_pizza_box);
+
+var _game = __webpack_require__(1);
+
+var _game2 = _interopRequireDefault(_game);
+
+var _game_view = __webpack_require__(8);
+
+var _game_view2 = _interopRequireDefault(_game_view);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+
+  var game = new _game2.default();
+  var gameView = new _game_view2.default(game, ctx);
+  var introModal = document.getElementById("intro");
+  window.directionsModal = document.getElementById("directions");
+
+  window.startGame = function (e) {
+    if (e.keyCode === 13) {
+      window.directionsModal.className = "hidden";
+      var newGame = new _game2.default();
+      gameView.game = newGame;
+      gameView.start();
+      removeEventListener('keypress', window.startGame);
+    }
+  };
+
+  setTimeout(function () {
+    introModal.className = "hidden";
+    window.directionsModal.className = "modal";
+    addEventListener('keypress', window.startGame);
+  }, 3000);
+});
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -904,7 +823,7 @@ var _entity = __webpack_require__(0);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _game = __webpack_require__(3);
+var _game = __webpack_require__(1);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -961,7 +880,7 @@ Pizza.SCALE = .11;
 exports.default = Pizza;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -977,7 +896,7 @@ var _entity = __webpack_require__(0);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _game = __webpack_require__(3);
+var _game = __webpack_require__(1);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -1026,6 +945,116 @@ var Platform = function (_Entity) {
 Platform.SCALE = 1;
 
 exports.default = Platform;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _game = __webpack_require__(1);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GameView = function () {
+  function GameView(game, ctx) {
+    _classCallCheck(this, GameView);
+
+    this.game = game;
+    this.ctx = ctx;
+    this.ctx.font = '28px Slackey';
+    this.ctx.fillStyle = '#84152D';
+    this.addHandlers();
+  }
+
+  _createClass(GameView, [{
+    key: 'start',
+    value: function start() {
+      this.platform = this.game.addPlatform();
+      this.player = this.game.addPlayer(this.platform.dY);
+      this.game.rainPizza();
+      _game2.default.SOUNDS.gameMusic.currentTime = 0;
+      _game2.default.SOUNDS.gameMusic.play();
+      requestAnimationFrame(this.animate.bind(this));
+    }
+  }, {
+    key: 'addHandlers',
+    value: function addHandlers() {
+      var _this = this;
+
+      document.addEventListener('keydown', function (e) {
+        switch (e.keyCode) {
+          case 37:
+            // left
+            _this.player.direction = 'left';
+            _this.player.moveBools.left = true;
+            break;
+          case 39:
+            // right
+            _this.player.direction = 'right';
+            _this.player.moveBools.right = true;
+            break;
+        }
+      });
+
+      document.addEventListener('keypress', function (e) {
+        switch (e.keyCode) {
+          case 32:
+            // space
+            _game2.default.SOUNDS.throwProjectile.play();
+            _this.player.shoot();
+            break;
+        }
+      });
+
+      document.addEventListener('keyup', function (e) {
+        switch (e.keyCode) {
+          case 37:
+            // left
+            _this.player.moveBools.left = false;
+            break;
+          case 39:
+            // right
+            _this.player.moveBools.right = false;
+            break;
+        }
+      });
+    }
+  }, {
+    key: 'animate',
+    value: function animate() {
+      this.game.step();
+      this.game.draw(this.ctx);
+      this.game.updateScore(this.ctx);
+      this.game.updateLives(this.ctx);
+      var loop = requestAnimationFrame(this.animate.bind(this));
+      if (this.game.lives === 0) {
+        _game2.default.SOUNDS.gameMusic.pause();
+        _game2.default.SOUNDS.loseGame.play();
+        cancelAnimationFrame(loop);
+        setTimeout(function () {
+          window.directionsModal.className = "modal";
+          addEventListener('keypress', window.startGame);
+        }, 5000);
+      }
+    }
+  }]);
+
+  return GameView;
+}();
+
+exports.default = GameView;
 
 /***/ })
 /******/ ]);
