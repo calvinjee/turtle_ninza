@@ -480,24 +480,27 @@ var Player = function (_Entity) {
     value: function shoot() {
       var _this2 = this;
 
-      var projectileOptions = {
-        sX: 0,
-        sY: 0,
-        sWidth: 512,
-        sHeight: 512,
-        dX: this.dX + 20,
-        dY: this.game.platforms[0].dY - Player.PLATFORM_ADJ,
-        dWidth: 25,
-        dHeight: 25,
-        game: this.game
-      };
+      if (this.canShoot && this.game.lives > 0) {
+        _game2.default.SOUNDS.throwProjectile.play();
+        var projectileOptions = {
+          sX: 0,
+          sY: 0,
+          sWidth: 512,
+          sHeight: 512,
+          dX: this.dX + 20,
+          dY: this.game.platforms[0].dY - Player.PLATFORM_ADJ,
+          dWidth: 25,
+          dHeight: 25,
+          game: this.game
+        };
 
-      var projectile = new _projectile2.default(projectileOptions);
-      projectile.game.add(projectile);
-      this.canShoot = false;
-      setTimeout(function () {
-        _this2.canShoot = true;
-      }, 250);
+        var projectile = new _projectile2.default(projectileOptions);
+        projectile.game.add(projectile);
+        this.canShoot = false;
+        setTimeout(function () {
+          _this2.canShoot = true;
+        }, 250);
+      }
     }
   }, {
     key: 'isCollidedWith',
@@ -976,6 +979,7 @@ var GameView = function () {
     this.ctx.font = '28px Slackey';
     this.ctx.fillStyle = '#84152D';
     this.addHandlers();
+    this.muted = false;
   }
 
   _createClass(GameView, [{
@@ -1012,8 +1016,11 @@ var GameView = function () {
         switch (e.keyCode) {
           case 32:
             // space
-            _game2.default.SOUNDS.throwProjectile.play();
             _this.player.shoot();
+            break;
+          case 109:
+            // m
+            _this.muted ? _this.mute(false) : _this.mute(true);
             break;
         }
       });
@@ -1040,6 +1047,7 @@ var GameView = function () {
       this.game.updateLives(this.ctx);
       var loop = requestAnimationFrame(this.animate.bind(this));
       if (this.game.lives === 0) {
+        this.player.canShoot = false;
         _game2.default.SOUNDS.gameMusic.pause();
         _game2.default.SOUNDS.loseGame.play();
         cancelAnimationFrame(loop);
@@ -1048,6 +1056,15 @@ var GameView = function () {
           addEventListener('keypress', window.startGame);
         }, 5000);
       }
+    }
+  }, {
+    key: 'mute',
+    value: function mute(bool) {
+      var sounds = Object.keys(_game2.default.SOUNDS);
+      sounds.forEach(function (sound) {
+        _game2.default.SOUNDS[sound].muted = bool;
+      });
+      this.muted = bool;
     }
   }]);
 
