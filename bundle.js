@@ -1062,7 +1062,6 @@ var GameView = function () {
         _game2.default.SOUNDS.loseGame.play();
         cancelAnimationFrame(loop);
         setTimeout(function () {
-          debugger;
           var end = document.getElementById('game-over');
           end.className = "modal small";
           addEventListener('keypress', window.startGame);
