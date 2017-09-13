@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./assets/css/reset.css">
     <link rel="stylesheet" href="./assets/css/game.css">
     <link href="https://fonts.googleapis.com/css?family=Bungee|Creepster|Freckle+Face|Frijole|Press+Start+2P|Shojumaru|Slackey" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Lustria|Merriweather|Merriweather+Sans|Source+Code+Pro|Source+Sans+Pro" rel="stylesheet">
     <script type="text/javascript" src='./bundle.js'></script>
   </head>
   <body>
@@ -49,12 +50,36 @@
         </div>
       </div>
 
-      <!-- <img class="tmnt-corner" src="./assets/images/alt_bg.png"> -->
+      <div id="game-over" class="hidden">
+        <div class="how-to-play">
+          <h2>Game Over</h2>
+          <h5>Press</h4>
+          <img id="restart" src="./assets/images/enter_key.png">
+          <h5>to</h4>
+          <h5>Play Again</h4>
+        </div>
+      </div>
 
       <div class="bio">
-        <a href="https://calvinjee.github.io/" target="_blank"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
-        <a href="https://github.com/calvinjee/" target="_blank"><i class="fa fa-github-square" aria-hidden="true"></i></a>
+        <a href="http://www.calvinjee.com" target="_blank">
+          <i class="fa fa-user-circle" aria-hidden="true"></i>
+          Greetings!
+        </a>
+        <a href="https://github.com/calvinjee/" target="_blank">
+          <i class="fa fa-github-square" aria-hidden="true"></i>
+          GitHub
+        </a>
+        <a href="mailto:cal.jee7@gmail.com">
+          <i class="fa fa-envelope" aria-hidden="true"></i>
+          cal.jee7@gmail.com
+        </a>
       </div>
+
+
+      <span id="sound" class="fa-stack fa-lg">
+        <i class="fa fa-volume-down fa-stack-1x" aria-hidden="true"></i>
+        <i id="mute" class="fa fa-ban fa-stack-1x text-danger hidden"></i>
+    </span>
     </div>
   </body>
 </html>
