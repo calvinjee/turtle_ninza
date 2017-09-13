@@ -7,8 +7,8 @@
   height: 100vh;
   width: auto;
   z-index: 1;
-  font-family: 'Lato';
   font-size: 14px;
+  font-family: 'Source Code Pro';
 }
 
 a {
