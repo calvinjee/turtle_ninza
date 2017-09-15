@@ -135,7 +135,16 @@ var Game = function () {
       var _this = this;
 
       setInterval(function () {
-        _this.addPizzaBox();
+        if (_this.score < 100) {
+          _this.addPizzaBox(2);
+        } else if (_this.score < 200) {
+          _this.addPizzaBox(3);
+        } else {
+          _this.addPizzaBox(4);
+          setTimeout(function () {
+            _this.addPizzaBox(5);
+          }, 500);
+        }
       }, 1000);
     }
   }, {
@@ -201,9 +210,9 @@ var Game = function () {
     }
   }, {
     key: 'addPizzaBox',
-    value: function addPizzaBox() {
+    value: function addPizzaBox(speed) {
       var startX = 50 + Math.floor(Math.random() * (Game.DIM_X - 100));
-      var fallSpeed = Math.random() + 2;
+      var fallSpeed = Math.random() + speed;
 
       var pizzaBoxOptions = {
         sX: 0,
@@ -304,6 +313,9 @@ var Game = function () {
             this.score += 10;
           }
         }
+      }
+      if (player.dY === 0) {
+        this.lives = 0;
       }
     }
   }, {
@@ -581,7 +593,7 @@ var Player = function (_Entity) {
           this.tickCount = 0;
         }
 
-        if (this.hitCount >= 120) {
+        if (this.hitCount >= 90) {
           this.hit = false;
           this.hitCount = 0;
           this.sY = 115;
@@ -660,8 +672,6 @@ var PizzaBox = function (_Entity) {
     value: function move() {
       this.dY += this.fallSpeed;
       if (this.dY > _game2.default.DIM_Y) {
-        // Game.SOUNDS.raisePlatform.currentTime = 3;
-        // Game.SOUNDS.raisePlatform.playbackRate = 2;
         _game2.default.SOUNDS.raisePlatform.play();
         this.remove();
         this.game.platforms[0].rise();
@@ -796,20 +806,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
   window.startGame = function (e) {
     if (e.keyCode === 13) {
+      document.removeEventListener('keypress', window.startGame);
       window.directionsModal.className = "hidden";
-      var end = document.getElementById('game-over');
+      var end = document.getElementById('high-scores');
       end.className = "hidden";
       var newGame = new _game2.default();
       gameView.game = newGame;
       gameView.start();
-      removeEventListener('keypress', window.startGame);
     }
   };
 
   setTimeout(function () {
     introModal.className = "hidden";
     window.directionsModal.className = "modal";
-    addEventListener('keypress', window.startGame);
+    document.addEventListener('keypress', window.startGame);
   }, 3000);
 });
 
@@ -982,8 +992,11 @@ var GameView = function () {
     this.ctx = ctx;
     this.ctx.font = '28px Slackey';
     this.ctx.fillStyle = '#EFB740';
+    this.platform = this.game.addPlatform();
+    this.player = this.game.addPlayer(this.platform.dY);
     this.addHandlers();
     this.muted = false;
+    this.enterScore = this.enterScore.bind(this);
   }
 
   _createClass(GameView, [{
@@ -1050,6 +1063,8 @@ var GameView = function () {
   }, {
     key: 'animate',
     value: function animate() {
+      var _this2 = this;
+
       this.game.step();
       this.game.draw(this.ctx);
       this.game.updateScore(this.ctx);
@@ -1064,9 +1079,48 @@ var GameView = function () {
         setTimeout(function () {
           var end = document.getElementById('game-over');
           end.className = "modal small";
-          addEventListener('keypress', window.startGame);
+          document.addEventListener('keypress', _this2.enterScore);
         }, 3000);
       }
+    }
+  }, {
+    key: 'enterScore',
+    value: function enterScore(e) {
+      if (e.keyCode === 13) {
+        var score = this.game.score;
+        var username = e.target.value;
+        var idx = 4;
+
+        if (username !== undefined && username !== '') {
+          // idx += 1;
+          firebase.database().ref('scores/').push({
+            score: score,
+            name: username
+          });
+        }
+        e.target.value = '';
+
+        this.updateScores(idx);
+        document.getElementById('game-over').className = "hidden";
+        document.removeEventListener('keypress', this.enterScore);
+        document.getElementById('high-scores').className = "modal small yellow";
+        document.addEventListener('keypress', window.startGame);
+      }
+    }
+  }, {
+    key: 'updateScores',
+    value: function updateScores(idx) {
+      firebase.database().ref('scores/').orderByChild('score').limitToLast(5).on('value', function (snapshot) {
+        var highscores = [];
+        snapshot.forEach(function (childSnapshot) {
+          highscores.push([childSnapshot.val().score, childSnapshot.val().name]);
+        });
+        highscores.reverse();
+        for (var i = 0; i < highscores.length; i++) {
+          document.querySelectorAll('span.score')[i].innerText = highscores[i][0];
+          document.querySelectorAll('span.name')[i].innerText = highscores[i][1];
+        }
+      });
     }
   }, {
     key: 'mute',

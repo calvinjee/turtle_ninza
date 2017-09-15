@@ -28,3 +28,32 @@ a:visited {
 	text-decoration: none;
 	color: inherit;
 }
+
+ul {
+	list-style: none;
+}
+
+input,
+label,
+select,
+button,
+textarea
+{
+	margin:0;
+	border:0;
+	padding:0;
+	display:inline-block;
+	vertical-align:middle;
+	white-space:normal;
+	background:none;
+	line-height:1;
+
+	/* Browsers have different default form fonts */
+	font-size: 12px;
+	font-family: 'Source Code Pro';
+}
+
+input:focus
+{
+	outline:0;
+}
