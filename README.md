@@ -1,6 +1,6 @@
 # Turtle Ninza
 
-[Live](turtleninza.calvinjee.com)
+[Live](http://turtleninza.calvinjee.com)
 
 A 2D browser game built in Vanilla JavaScript and HTML5 Canvas.
 
