@@ -2,7 +2,7 @@
 
 [Live](http://turtleninza.calvinjee.com)
 
-A 2D browser game built in Vanilla JavaScript and HTML5 Canvas.
+A 2D browser game built in Vanilla JavaScript, HTML, and Canvas.
 
 ### Description
 After a long night of fighting the Foot, the turtles are hungry for their favorite food. Luckily for them a pizza delivery guy had a bike accident right above their sewer and dropped a load of pizza boxes. Help the turtles slice up their pies so they can eat but avoid getting hit by them.
@@ -21,7 +21,8 @@ Good luck!
 
 ### Technologies Used
 - JavaScript
-- HTML5 Canvas
+- HTML
+- Canvas
 - CSS
 
 ### Features to Come
