@@ -6,6 +6,8 @@
   background-repeat: no-repeat;
   height: 100vh;
   width: auto;
+  min-width: 400px;
+  min-height: 500px;
   z-index: 1;
   font-size: 14px;
   font-family: 'Source Code Pro';
@@ -178,6 +180,7 @@ a:visited {
 
 .yellow {
   background-color: #EFB740;
+  border: 1px solid #EFB740;
 }
 
 .scores-table {
@@ -194,8 +197,6 @@ a:visited {
   display: flex;
   justify-content: center;
 }
-
-
 
 .bio {
   display: flex;
@@ -250,4 +251,20 @@ i.fa-envelope {
 
 .hidden {
   display: none;
+}
+
+@media (max-width: 1050px) {
+  .bio p {
+    display: none;
+  }
+}
+
+@media (max-width: 750px) {
+  .bio {
+    display: none;
+  }
+
+  #sound {
+    display: none;
+  }
 }
