@@ -39,7 +39,7 @@ a:visited {
   align-items: center;
   justify-content: space-between;
   width: 400px;
-  height: 500px;
+  min-height: 500px;
   position: fixed;
   top: 15%;
   left: 50%;
@@ -52,8 +52,10 @@ a:visited {
 }
 
 .small {
-  width: 250px;
-  height: 350px;
+  min-width: 300px;
+  min-height: 350px;
+  top: 20%;
+  opacity: .9;
   background-color: #84152D;
   border: 1px solid #84152D;
 }
